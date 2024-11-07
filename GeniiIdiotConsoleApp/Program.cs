@@ -9,6 +9,7 @@ namespace GeniiIdiotConsoleApp
 
     internal class Program
     {
+        // Комментарий
         static void Main(string[] args)
         {
             string continueTest = "";
