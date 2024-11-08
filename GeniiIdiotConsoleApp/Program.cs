@@ -56,7 +56,7 @@ namespace GeniiIdiotConsoleApp
                 }
 
                 Console.WriteLine("Количество правильных ответов: " + countRightAnswers);
-                Console.WriteLine($"{user1.Name} Ваш диагноз: {GetDiagnoses(countRightAnswers)}");
+                Console.WriteLine($"{user1.Name} Ваш диагноз: {GetDiagnoses(countRightAnswers, countQuestions)}");
                 Console.WriteLine("Вы хотите повторить тест? yes/no?");
                 continueTest = Console.ReadLine();
                 if (continueTest.ToLower() == "no") break;
@@ -73,16 +73,25 @@ namespace GeniiIdiotConsoleApp
             questions.Add(new QuestionWithAnswer("Пять свечей горело, две потухли. Сколько свечей осталось?", 2));
             return questions;
         }
-        static string GetDiagnoses(int countRightAnswers)
+        static string GetDiagnoses(int countRightAnswers, int countQuestions)
         {
-            string[] diagnoses = new string[6];
-            diagnoses[0] = "кретин";
-            diagnoses[1] = "идиот";
-            diagnoses[2] = "дурак";
-            diagnoses[3] = "нормальный";
-            diagnoses[4] = "талант";
-            diagnoses[5] = "гений";
-            return diagnoses[countRightAnswers];
+            var diagnoses = new List<DiagnosInNumber>();
+            diagnoses.Add(new DiagnosInNumber("кретин",0,0.1));
+            diagnoses.Add(new DiagnosInNumber("идиот", 0.2,0.3));
+            diagnoses.Add(new DiagnosInNumber("дурак", 0.4,0.4));
+            diagnoses.Add(new DiagnosInNumber("нормальный", 0.5,0.6));
+            diagnoses.Add(new DiagnosInNumber("талант", 0.7,0.8));
+            diagnoses.Add(new DiagnosInNumber("гений", 0.9,1));
+            double diferense = Math.Round(countRightAnswers / (double)countQuestions, 1);
+            foreach (var diagnos in diagnoses)
+            {
+                if (diferense >= diagnos.MinNumberDiagnos && diferense <= diagnos.MaxNumberDiagnos)
+                {
+                    return diagnos.DiagnosName;
+                }
+            }
+            return null;
         }
     }
+
 }
