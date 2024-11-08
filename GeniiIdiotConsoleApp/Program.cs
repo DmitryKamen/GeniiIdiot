@@ -32,7 +32,19 @@ namespace GeniiIdiotConsoleApp
                     int randomQuestionIndex = random.Next(0, countQuestions - i);
                     Console.WriteLine(questionsWithAnswers[randomQuestionIndex].Question);
 
-                    int userAnswer = Convert.ToInt32(Console.ReadLine());
+                    int userAnswer;
+                    while (true)
+                    {
+                        string answerStr = Console.ReadLine();
+                        if (int.TryParse(answerStr, out userAnswer))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Введённая строка не является числом, введите пожалуйста число: ");
+                        }
+                    }
 
                     int rightAnswer = questionsWithAnswers[randomQuestionIndex].Answer;
 
