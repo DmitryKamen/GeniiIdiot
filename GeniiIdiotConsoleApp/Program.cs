@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace GeniiIdiotConsoleApp
             string continueTest = "";
             while (true)
             {
-                
+
                 var questionsWithAnswers = GetQuestionsWithAnswers();
                 int countQuestions = questionsWithAnswers.Count;
                 int countRightAnswers = 0;
@@ -55,8 +54,13 @@ namespace GeniiIdiotConsoleApp
                     questionsWithAnswers.RemoveAt(randomQuestionIndex);
                 }
 
-                Console.WriteLine("Количество правильных ответов: " + countRightAnswers);
-                Console.WriteLine($"{user1.Name} Ваш диагноз: {GetDiagnoses(countRightAnswers, countQuestions)}");
+                //Console.WriteLine("Количество правильных ответов: " + countRightAnswers);
+                //Console.WriteLine($"{user1.Name} Ваш диагноз: {GetDiagnoses(countRightAnswers, countQuestions)}");
+
+                var manager = new ResultsManager();
+                manager.AddResult(user1.Name, countRightAnswers, GetDiagnoses(countRightAnswers, countQuestions));
+                manager.DisplayResults();
+
                 Console.WriteLine("Вы хотите повторить тест? yes/no?");
                 continueTest = Console.ReadLine();
                 if (continueTest.ToLower() == "no") break;
@@ -76,12 +80,12 @@ namespace GeniiIdiotConsoleApp
         static string GetDiagnoses(int countRightAnswers, int countQuestions)
         {
             var diagnoses = new List<DiagnosInNumber>();
-            diagnoses.Add(new DiagnosInNumber("кретин",0,0.1));
-            diagnoses.Add(new DiagnosInNumber("идиот", 0.2,0.3));
-            diagnoses.Add(new DiagnosInNumber("дурак", 0.4,0.4));
-            diagnoses.Add(new DiagnosInNumber("нормальный", 0.5,0.6));
-            diagnoses.Add(new DiagnosInNumber("талант", 0.7,0.8));
-            diagnoses.Add(new DiagnosInNumber("гений", 0.9,1));
+            diagnoses.Add(new DiagnosInNumber("кретин", 0, 0.1));
+            diagnoses.Add(new DiagnosInNumber("идиот", 0.2, 0.3));
+            diagnoses.Add(new DiagnosInNumber("дурак", 0.4, 0.4));
+            diagnoses.Add(new DiagnosInNumber("нормальный", 0.5, 0.6));
+            diagnoses.Add(new DiagnosInNumber("талант", 0.7, 0.8));
+            diagnoses.Add(new DiagnosInNumber("гений", 0.9, 1));
             double diferense = Math.Round(countRightAnswers / (double)countQuestions, 1);
             foreach (var diagnos in diagnoses)
             {
