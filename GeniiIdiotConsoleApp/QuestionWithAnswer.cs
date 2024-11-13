@@ -1,13 +1,15 @@
 ﻿namespace GeniiIdiotConsoleApp
 {
-    public class QuestionWithAnswer 
+    public class Question 
     {
-        public string Question { get; set; }
+        public int Number { get; set; } 
+        public string Text { get; set; }
         public int Answer { get; set; }
 
-        public QuestionWithAnswer(string question, int answer)
+        public Question(string text, int answer)
         {
-            Question = question;
+            
+            Text = text;
             Answer = answer;
         }
 

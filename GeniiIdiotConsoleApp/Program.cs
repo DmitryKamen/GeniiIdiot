@@ -6,83 +6,140 @@ using System.Threading.Tasks;
 namespace GeniiIdiotConsoleApp
 {
 
-    internal class Program
+    internal partial class Program
     {
         // Комментарий
         static void Main(string[] args)
         {
-            string continueTest = "";
             while (true)
             {
+                
+                var questionsRepository = GetQuestionsRepository();
+                var usersResultRepository = new UsersResultRepository();
+                var questions = questionsRepository.GetQuestions();
+                AddQuestion(questionsRepository);
+                RemoveQuestion(questionsRepository);
+                var countQuestions = questions.Count;
+                var countRightAnswers = 0;
 
-                var questionsWithAnswers = GetQuestionsWithAnswers();
-                int countQuestions = questionsWithAnswers.Count;
-                int countRightAnswers = 0;
-
-                Random random = new Random();
+                var random = new Random();
 
                 Console.WriteLine("Введите ваше имя:");
-                User user1 = new User(Console.ReadLine());
+                var user1 = new User(Console.ReadLine());
 
                 for (int i = 0; i < countQuestions; i++)
                 {
                     Console.WriteLine("Вопрос №" + (i + 1));
 
-                    int randomQuestionIndex = random.Next(0, countQuestions - i);
-                    Console.WriteLine(questionsWithAnswers[randomQuestionIndex].Question);
+                    var randomQuestionIndex = random.Next(0, countQuestions - i);
+                    Console.WriteLine(questions[randomQuestionIndex].Text);
 
-                    int userAnswer;
-                    while (true)
-                    {
-                        string answerStr = Console.ReadLine();
-                        if (int.TryParse(answerStr, out userAnswer))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Введённая строка не является числом, введите пожалуйста число: ");
-                        }
-                    }
+                    var userAnswer = GetUserAnswer();
 
-                    int rightAnswer = questionsWithAnswers[randomQuestionIndex].Answer;
+
+                    var rightAnswer = questions[randomQuestionIndex].Answer;
 
                     if (userAnswer == rightAnswer)
                     {
                         countRightAnswers++;
                     }
-                    questionsWithAnswers.RemoveAt(randomQuestionIndex);
-                }
-
-                //Console.WriteLine("Количество правильных ответов: " + countRightAnswers);
-                //Console.WriteLine($"{user1.Name} Ваш диагноз: {GetDiagnoses(countRightAnswers, countQuestions)}");
-
+                    questions.RemoveAt(randomQuestionIndex);
+                } 
+                
+                user1.Diagnose = GetDiagnoses(countRightAnswers, countQuestions);
+                usersResultRepository.Users.Add(user1);
                 var manager = new ResultsManager();
-                manager.AddResult(user1.Name, countRightAnswers, GetDiagnoses(countRightAnswers, countQuestions));
-                manager.DisplayResults();
-
-                Console.WriteLine("Вы хотите повторить тест? yes/no?");
-                continueTest = Console.ReadLine();
+                manager.AddResult(user1.Name, countRightAnswers, user1.Diagnose);
+                while (true)
+                {
+                    Console.WriteLine("Хотите вывести результат введите - yes , если не хотите нажмите любую клавишу");
+                    var showResultTest = Console.ReadLine();
+                    if (showResultTest.ToLower() == "yes") manager.DisplayResults();
+                    else break;
+                }
+                Console.WriteLine("Если хотите продолжить нажмите любую клавишу, если нет введите - no ");
+                var continueTest = Console.ReadLine();
                 if (continueTest.ToLower() == "no") break;
             }
         }
-        static List<QuestionWithAnswer> GetQuestionsWithAnswers()
+
+        private static void RemoveQuestion(QuestionsRepository questionsRepository)
+        {
+            while (true)
+            {
+                Console.WriteLine("Если вы хотите удалить вопрос для тестирования введите - yes , если нет, чтобы начать тест нажмите любую клавишу");
+                var adminChoise = Console.ReadLine();
+                if (adminChoise.ToLower() == "yes")
+                {
+                    Console.WriteLine("Введите номер вопроса:");
+                    int number = GetUserAnswer();
+                    questionsRepository.GetQuestions().ForEach(q => { if (q.Number == number) questionsRepository.RemoveQuestion(q); })
+;
+                }
+                else break;
+            }
+        }
+
+        private static void AddQuestion(QuestionsRepository repository)
+        {
+            while (true)
+            {
+
+                Console.WriteLine("Если вы хотите дабавить вопрос для тестирования введите - yes , если нет, чтобы начать тест нажмите любую клавишу");
+                var adminChoise = Console.ReadLine();
+                if (adminChoise.ToLower() == "yes")
+                {
+                    Console.WriteLine("Введите номер вопроса:");
+                    int number = GetUserAnswer();
+                    Console.WriteLine("Введите текст вопроса");
+                    string text = Console.ReadLine();
+                    Console.WriteLine("Введите правильный ответ:");
+                    int answer = GetUserAnswer();
+                    var question = new Question(text, answer);
+                    question.Number = number;
+                    repository.AddQuestion(question);
+
+                }
+                else break;
+            }
+        }
+
+        private static int GetUserAnswer()
+        {
+            while (true)
+            {
+                try 
+                {
+                    return Convert.ToInt32(Console.ReadLine());
+                }
+                catch(FormatException) 
+                {
+                    Console.WriteLine("Введённая строка не является числом, введите пожалуйста число: ");
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Вы ввели слишком большое число: ");
+                }
+            }   
+        }
+
+        static QuestionsRepository GetQuestionsRepository()
         {
 
-            List<QuestionWithAnswer> questions = new List<QuestionWithAnswer>();
-            questions.Add(new QuestionWithAnswer("Сколько будет два плюс два умноженное на два?", 6));
-            questions.Add(new QuestionWithAnswer("Бревно нужно распилить на 10 частей. Сколько распилов нужно сделать?", 9));
-            questions.Add(new QuestionWithAnswer("На двух руках 10 пальцев. Сколько пальцев на 5 руках?", 25));
-            questions.Add(new QuestionWithAnswer("Укол делают каждые полчаса. Сколько нужно минут, чтобы сделать три укола?", 60));
-            questions.Add(new QuestionWithAnswer("Пять свечей горело, две потухли. Сколько свечей осталось?", 2));
-            return questions;
+            QuestionsRepository questionsRepository = new QuestionsRepository();
+            questionsRepository.AddQuestion(new Question("Сколько будет два плюс два умноженное на два?", 6));
+            questionsRepository.AddQuestion(new Question("Бревно нужно распилить на 10 частей. Сколько распилов нужно сделать?", 9));
+            questionsRepository.AddQuestion(new Question("На двух руках 10 пальцев. Сколько пальцев на 5 руках?", 25));
+            questionsRepository.AddQuestion(new Question("Укол делают каждые полчаса. Сколько нужно минут, чтобы сделать три укола?", 60));
+            questionsRepository.AddQuestion(new Question("Пять свечей горело, две потухли. Сколько свечей осталось?", 2));
+            return questionsRepository;
         }
         static string GetDiagnoses(int countRightAnswers, int countQuestions)
         {
             var diagnoses = new List<DiagnosInNumber>();
-            diagnoses.Add(new DiagnosInNumber("кретин", 0, 0.1));
-            diagnoses.Add(new DiagnosInNumber("идиот", 0.2, 0.3));
-            diagnoses.Add(new DiagnosInNumber("дурак", 0.4, 0.4));
+            diagnoses.Add(new DiagnosInNumber("кретин", 0, 0));
+            diagnoses.Add(new DiagnosInNumber("идиот", 0.1, 0.2));
+            diagnoses.Add(new DiagnosInNumber("дурак", 0.3, 0.4));
             diagnoses.Add(new DiagnosInNumber("нормальный", 0.5, 0.6));
             diagnoses.Add(new DiagnosInNumber("талант", 0.7, 0.8));
             diagnoses.Add(new DiagnosInNumber("гений", 0.9, 1));
@@ -97,5 +154,5 @@ namespace GeniiIdiotConsoleApp
             return null;
         }
     }
-
+    
 }

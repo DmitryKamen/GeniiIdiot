@@ -4,6 +4,7 @@
     {
         public string Name { get; set; }
 
+        public string Diagnose { get; set; }
         public User(string name)
         {
             Name = name;
