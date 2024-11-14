@@ -9,72 +9,42 @@ namespace GeniiIdiotConsoleApp
     {
         private readonly string _filename;
 
-        public ResultsManager(string filename = "results.csv")
+        public ResultsManager(string filename)
         {
             _filename = filename;
 
             // Создаем файл с заголовком, если его нет
             if (!File.Exists(_filename))
             {
-                using (var writer = new StreamWriter(_filename))
-                {
-                    writer.WriteLine("ФИО,Количество правильных ответов,Диагноз");
-                }
+                File.Create(_filename);
             }
         }
 
-        public void AddResult(string fullName, int correctAnswers, string diagnosis)
+        public void AddResult(string value)
         {
-            using (var writer = new StreamWriter(_filename, true))
-            {
-                writer.WriteLine($"{fullName},{correctAnswers},{diagnosis}");
-            }
+            var writer = new StreamWriter(_filename, true);
+            writer.WriteLine(value);
+            writer.Close();
+
         }
 
-        public List<Result> GetResults()
+        public List<string> GetFileInformation()
         {
-            var results = new List<Result>();
+            var results = new List<string>();
 
-            using (var reader = new StreamReader(_filename))
+            var reader = new StreamReader(_filename);
+            while (!reader.EndOfStream)
             {
-                reader.ReadLine(); // Пропускаем заголовок
-
-                while (!reader.EndOfStream)
+                var line = reader.ReadLine();
+                if (line != null)
                 {
-                    var line = reader.ReadLine();
-                    if (line != null)
-                    {
-                        var values = line.Split(',');
-                        results.Add(new Result(values[0], int.Parse(values[1]), values[2]));
-                    }
+                    results.Add(line);
                 }
             }
-
+            reader.Close();
             return results;
         }
-
-        public void DisplayResults()
-        {
-            var results = GetResults();
-
-            if (results.Any())
-            {
-                Console.WriteLine("+-------------------------------+-----------------------------+------------------+");
-                Console.WriteLine("| ФИО                           | Количество правильных ответов | Диагноз          |");
-                Console.WriteLine("+-------------------------------+-----------------------------+------------------+");
-
-                foreach (var result in results)
-                {
-                    Console.WriteLine($"| {result.FullName,-30} | {result.CorrectAnswers,-27} | {result.Diagnosis,-15} |");
-                }
-
-                Console.WriteLine("+-------------------------------+-----------------------------+------------------+");
-            }
-            else
-            {
-                Console.WriteLine("Нет данных для отображения.");
-            }
-        }
     }
-
 }
+
+

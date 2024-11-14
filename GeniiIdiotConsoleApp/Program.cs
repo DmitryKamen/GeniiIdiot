@@ -25,7 +25,7 @@ namespace GeniiIdiotConsoleApp
                 var random = new Random();
 
                 Console.WriteLine("Введите ваше имя:");
-                var user1 = new User(Console.ReadLine());
+                var user = new User(Console.ReadLine());
 
                 for (int i = 0; i < countQuestions; i++)
                 {
@@ -46,21 +46,42 @@ namespace GeniiIdiotConsoleApp
                     questions.RemoveAt(randomQuestionIndex);
                 } 
                 
-                user1.Diagnose = GetDiagnoses(countRightAnswers, countQuestions);
-                usersResultRepository.Users.Add(user1);
-                var manager = new ResultsManager();
-                manager.AddResult(user1.Name, countRightAnswers, user1.Diagnose);
+                user.Diagnose = GetDiagnoses(countRightAnswers, countQuestions);
+                user.RightAnswers = countRightAnswers;
+                usersResultRepository.Users.Add(user);
+
+                var manager = new ResultsManager("results.csv");
+                manager.AddResult(SaveUserResult(user.Name, countRightAnswers, user.Diagnose));                
                 while (true)
                 {
                     Console.WriteLine("Хотите вывести результат введите - yes , если не хотите нажмите любую клавишу");
                     var showResultTest = Console.ReadLine();
-                    if (showResultTest.ToLower() == "yes") manager.DisplayResults();
+                    if (showResultTest.ToLower() == "yes") ShowUserResult(manager.GetFileInformation());
                     else break;
                 }
                 Console.WriteLine("Если хотите продолжить нажмите любую клавишу, если нет введите - no ");
                 var continueTest = Console.ReadLine();
                 if (continueTest.ToLower() == "no") break;
             }
+        }
+
+        private static string SaveUserResult(string userName, int countRightAnswers, string diagnose)
+        {
+            string value = $"{userName},{countRightAnswers},{diagnose}"; 
+            return value;
+        }
+        
+        private static void ShowUserResult(List<string> resultLine)
+        {
+
+            Console.WriteLine("{0,-30}{1,-40}{2,-30}", "Имя", "Количество правильных ответов", "Диагноз");
+
+            foreach (var result in resultLine)
+            {
+                var resT = result.Split(',');
+                Console.WriteLine($"|{resT[0],-30}|{int.Parse(resT[1]), -40}|{resT[2], -30}|");
+            }
+            
         }
 
         private static void RemoveQuestion(QuestionsRepository questionsRepository)
