@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,12 +15,14 @@ namespace GeniiIdiotConsoleApp
         {
             while (true)
             {
-                
-                var questionsRepository = GetQuestionsRepository();
+
+                var questionsRepository = new QuestionsRepository();
                 var usersResultRepository = new UsersResultRepository();
-                var questions = questionsRepository.GetQuestions();
+                var managerQuestion = new FileManager("question.txt");
                 AddQuestion(questionsRepository);
                 RemoveQuestion(questionsRepository);
+                SaveQuestion(questionsRepository, managerQuestion);
+                var questions = GetQuestionsRepository(managerQuestion.GetFileInformation());
                 var countQuestions = questions.Count;
                 var countRightAnswers = 0;
 
@@ -50,13 +54,13 @@ namespace GeniiIdiotConsoleApp
                 user.RightAnswers = countRightAnswers;
                 usersResultRepository.Users.Add(user);
 
-                var manager = new ResultsManager("results.csv");
-                manager.AddResult(SaveUserResult(user.Name, countRightAnswers, user.Diagnose));                
+                var managerResult = new FileManager("results.txt");
+                managerResult.AddResult(SaveUserResult(user.Name, countRightAnswers, user.Diagnose));                
                 while (true)
                 {
                     Console.WriteLine("Хотите вывести результат введите - yes , если не хотите нажмите любую клавишу");
                     var showResultTest = Console.ReadLine();
-                    if (showResultTest.ToLower() == "yes") ShowUserResult(manager.GetFileInformation());
+                    if (showResultTest.ToLower() == "yes") ShowUserResult(managerResult.GetFileInformation());
                     else break;
                 }
                 Console.WriteLine("Если хотите продолжить нажмите любую клавишу, если нет введите - no ");
@@ -65,9 +69,20 @@ namespace GeniiIdiotConsoleApp
             }
         }
 
+        private static void SaveQuestion(QuestionsRepository questionsRepository, FileManager managerQuestion)
+        {
+            questionsRepository.GetQuestions().ForEach((q) =>
+            {
+                var questionStr = $"{q.Number}#{q.Text}#{q.Answer}";
+                managerQuestion.AddResult(questionStr);
+
+            });
+
+        }
+
         private static string SaveUserResult(string userName, int countRightAnswers, string diagnose)
         {
-            string value = $"{userName},{countRightAnswers},{diagnose}"; 
+            string value = $"{userName}#{countRightAnswers}#{diagnose}"; 
             return value;
         }
         
@@ -78,7 +93,7 @@ namespace GeniiIdiotConsoleApp
 
             foreach (var result in resultLine)
             {
-                var resT = result.Split(',');
+                var resT = result.Split('#');
                 Console.WriteLine($"|{resT[0],-30}|{int.Parse(resT[1]), -40}|{resT[2], -30}|");
             }
             
@@ -116,8 +131,7 @@ namespace GeniiIdiotConsoleApp
                     string text = Console.ReadLine();
                     Console.WriteLine("Введите правильный ответ:");
                     int answer = GetUserAnswer();
-                    var question = new Question(text, answer);
-                    question.Number = number;
+                    var question = new Question( number ,text, answer);
                     repository.AddQuestion(question);
 
                 }
@@ -144,16 +158,16 @@ namespace GeniiIdiotConsoleApp
             }   
         }
 
-        static QuestionsRepository GetQuestionsRepository()
+        static List<Question> GetQuestionsRepository(List<string> valuesStrings)
         {
 
-            QuestionsRepository questionsRepository = new QuestionsRepository();
-            questionsRepository.AddQuestion(new Question("Сколько будет два плюс два умноженное на два?", 6));
-            questionsRepository.AddQuestion(new Question("Бревно нужно распилить на 10 частей. Сколько распилов нужно сделать?", 9));
-            questionsRepository.AddQuestion(new Question("На двух руках 10 пальцев. Сколько пальцев на 5 руках?", 25));
-            questionsRepository.AddQuestion(new Question("Укол делают каждые полчаса. Сколько нужно минут, чтобы сделать три укола?", 60));
-            questionsRepository.AddQuestion(new Question("Пять свечей горело, две потухли. Сколько свечей осталось?", 2));
-            return questionsRepository;
+            var questions = new List<Question>();
+            valuesStrings.ForEach(value =>
+            {
+                var valT = value.Split('#');
+                questions.Add(new Question(int.Parse(valT[0]), valT[1], int.Parse(valT[2])));
+            });
+            return questions;
         }
         static string GetDiagnoses(int countRightAnswers, int countQuestions)
         {

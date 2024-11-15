@@ -5,19 +5,14 @@ using System.Linq;
 
 namespace GeniiIdiotConsoleApp
 {
-    public class ResultsManager
+    public class FileManager
     {
         private readonly string _filename;
 
-        public ResultsManager(string filename)
+        public FileManager(string filename)
         {
             _filename = filename;
 
-            // Создаем файл с заголовком, если его нет
-            if (!File.Exists(_filename))
-            {
-                File.Create(_filename);
-            }
         }
 
         public void AddResult(string value)

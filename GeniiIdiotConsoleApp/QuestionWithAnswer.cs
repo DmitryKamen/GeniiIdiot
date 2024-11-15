@@ -6,9 +6,10 @@
         public string Text { get; set; }
         public int Answer { get; set; }
 
-        public Question(string text, int answer)
+        public Question(int number, string text, int answer)
         {
             
+            Number = number;
             Text = text;
             Answer = answer;
         }
