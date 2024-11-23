@@ -7,7 +7,7 @@ namespace GeniiIdiotConsoleApp
 {
     public class FileManager
     {
-        private readonly string _filename;
+        public readonly string _filename;
 
         public FileManager(string filename)
         {
@@ -15,7 +15,7 @@ namespace GeniiIdiotConsoleApp
 
         }
 
-        public void AddResult(string value)
+        public void AddInformationToFile(string value)
         {
             var writer = new StreamWriter(_filename, true);
             writer.WriteLine(value);
@@ -38,6 +38,16 @@ namespace GeniiIdiotConsoleApp
             }
             reader.Close();
             return results;
+        }
+
+        public static bool Exist(string filename)
+        {
+            return File.Exists(filename);
+        }
+
+        internal void Clear()
+        {
+            File.WriteAllText(_filename, string.Empty);
         }
     }
 }

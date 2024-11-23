@@ -10,6 +10,13 @@
         public User(string name)
         {
             Name = name;
+            RightAnswers = 0;
+            Diagnose = "Не определен";
+        }
+
+        public void IncrementRightAnswers()
+        {
+            RightAnswers++;
         }
 
     }
