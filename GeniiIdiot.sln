@@ -5,6 +5,10 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeniiIdiotConsoleApp", "GeniiIdiotConsoleApp\GeniiIdiotConsoleApp.csproj", "{A8BD133F-9885-42E6-9778-49A1B439576C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeniiIdiotWinForm", "GeniiIdiotWinForm\GeniiIdiotWinForm.csproj", "{9CA5DA20-53B6-4072-B6AC-3DDCF2DC9E8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeniiIdiot.Common", "GeniiIdiot.Common\GeniiIdiot.Common.csproj", "{77586A09-3E30-4AA8-B5B1-B6D840794DDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{A8BD133F-9885-42E6-9778-49A1B439576C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8BD133F-9885-42E6-9778-49A1B439576C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8BD133F-9885-42E6-9778-49A1B439576C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA5DA20-53B6-4072-B6AC-3DDCF2DC9E8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA5DA20-53B6-4072-B6AC-3DDCF2DC9E8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA5DA20-53B6-4072-B6AC-3DDCF2DC9E8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA5DA20-53B6-4072-B6AC-3DDCF2DC9E8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77586A09-3E30-4AA8-B5B1-B6D840794DDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77586A09-3E30-4AA8-B5B1-B6D840794DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77586A09-3E30-4AA8-B5B1-B6D840794DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77586A09-3E30-4AA8-B5B1-B6D840794DDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
