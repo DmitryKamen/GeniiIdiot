@@ -119,21 +119,12 @@ namespace GeniiIdiot.Common
 
         public static int GetUserAnswerNumber()
         {
-            while (true)
+            int number;
+            while (!InputValidator.TryParseToNumber(Console.ReadLine(), out number, out string errorMassage))
             {
-                try
-                {
-                    return Convert.ToInt32(Console.ReadLine());
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Введённая строка не является числом, введите пожалуйста число: ");
-                }
-                catch (OverflowException)
-                {
-                    Console.WriteLine("Вы ввели слишком большое число: ");
-                }
+                Console.WriteLine(errorMassage);
             }
+            return number;
         }
     }
 }

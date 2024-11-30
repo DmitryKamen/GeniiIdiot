@@ -43,20 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiagnoseRepository.cs" />
-    <Compile Include="DiagnosInNumber.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Program.DiagnoseRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuestionsRepository.cs" />
-    <Compile Include="QuestionWithAnswer.cs" />
-    <Compile Include="Result.cs" />
-    <Compile Include="ResultsManager.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UsersResultRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GeniiIdiot.Common\GeniiIdiot.Common.csproj">
+      <Project>{77586a09-3e30-4aa8-b5b1-b6d840794dde}</Project>
+      <Name>GeniiIdiot.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

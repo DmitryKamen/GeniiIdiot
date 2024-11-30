@@ -13,6 +13,12 @@
             RightAnswers = 0;
             Diagnose = "Не определен";
         }
+        public User(string name, int rightAnswer,string diagnose)
+        {
+            Name = name;
+            RightAnswers = rightAnswer;
+            Diagnose = diagnose;
+        }
 
         public void IncrementRightAnswers()
         {

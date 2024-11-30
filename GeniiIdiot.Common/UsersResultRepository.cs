@@ -14,6 +14,7 @@ namespace GeniiIdiot.Common
             Users = new List<User>();
         }
 
+        
         public string SaveUserResult()
         {
             var user = Users.Last();
@@ -31,6 +32,19 @@ namespace GeniiIdiot.Common
                 var resT = result.Split('#');
                 Console.WriteLine($"|{resT[0],-30}|{int.Parse(resT[1]),-40}|{resT[2],-30}|");
             }
+        }
+
+        public static List<User> GetUsersResults(List<string> results)
+        {
+            var users = new List<User>();
+            foreach (var result in results)
+            {
+                var res = result.Split('#');
+                var user = new User(res[0], int.Parse(res[1]), res[2]);
+                users.Add(user);
+                
+            }
+            return users;
         }
     }
 }

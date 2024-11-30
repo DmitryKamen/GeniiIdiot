@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,7 @@ namespace GeniiIdiotWinForm
 {
     public partial class Form1 : Form
     {
-        private List<Question> questions;
-        private Question currentQuestion;
-        private User user;
-        private int countQuestions;
-        private int questionsNumber = 1;
+        Game game;
         public Form1()
         {
             InitializeComponent();
@@ -30,47 +27,59 @@ namespace GeniiIdiotWinForm
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var questionsRepository = new QuestionsRepository();
-            var usersResultRepository = new UsersResultRepository();
-            var managerQuestion = new FileManager("question.txt");
-            questionsRepository.SaveQuestion(managerQuestion);
-            questions = questionsRepository.GetQuestionsRepository(managerQuestion.GetFileInformation());
-            countQuestions = questions.Count;
-            user = new User("Неизвестно");
-            questionsNumber = 0;
+            var welcomeForm = new WelcomeForm();
+            welcomeForm.ShowDialog();
+            
+            var user = new User(welcomeForm.userNameTextBox.Text);
+            game = new Game(user);
+            
 
             ShowNextQuestion();
         }
 
         private void ShowNextQuestion()
         {
-            var random = new Random();
-            var randomQuestionIndex = random.Next(0, questions.Count);
-            currentQuestion = questions[randomQuestionIndex];
+            var currentQuestion = game.GetNextQuestion();
             questionTextLabel.Text = currentQuestion.Text;
-            questionsNumber++;
-            questionNumberLabel.Text = "Вопрос №" + questionsNumber;
+
+            questionNumberLabel.Text = game.GetQuestionNumberText();
         }
 
         private void nextButton_Click(object sender, EventArgs e)
         {
-            var userAnswer = Convert.ToInt32(userAnswerTextBox.Text);
-            var rightAnswer = currentQuestion.Answer;
-
-            if (userAnswer == rightAnswer)
+            var parsed = InputValidator.TryParseToNumber(userAnswerTextBox.Text, out int userAnswer, out string errorMassage);
+            if (!parsed)
             {
-                user.IncrementRightAnswers();
+                MessageBox.Show(errorMassage);
             }
-            questions.Remove(currentQuestion);
-
-            var endGame = questions.Count == 0;
-            if (endGame)
+            else
             {
-                user.Diagnose = DiagnoseRepository.GetDiagnoses(user.RightAnswers, countQuestions);
-                MessageBox.Show(user.Diagnose);
-                return;
+                game.AcceptAnswer(userAnswer);
+                if (game.End())
+                {
+                    var message = game.CalculateDiagnose();
+                    MessageBox.Show(message);
+                    return;
+
+                }
+                ShowNextQuestion();
             }
-            ShowNextQuestion();
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void рестартToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
+
+        private void показатьПредыдущиеРезультатыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var resultsForm = new ResultsForm();
+            resultsForm.ShowDialog();
         }
     }
 }
