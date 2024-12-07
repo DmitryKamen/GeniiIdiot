@@ -5,6 +5,7 @@
         public string Text { get; set; }
         public int Answer { get; set; }
 
+        public Question() { }
         public Question(string text, int answer)
         {
             

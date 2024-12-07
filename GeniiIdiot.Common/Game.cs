@@ -10,8 +10,6 @@ namespace GeniiIdiot.Common
     {
         public List<Question> questions;
         public Question currentQuestion;
-        public QuestionsRepository questionsRepository;
-        public UsersResultRepository usersResultRepository;
         public int countQuestions;
         public int questionsNumber;
         public User user;
@@ -19,11 +17,8 @@ namespace GeniiIdiot.Common
         public Game(User user)
         { 
             this.user = user;
-            questionsRepository = new QuestionsRepository();
-            usersResultRepository = new UsersResultRepository();
-            var managerQuestion = new FileManager("question.txt");
-            questionsRepository.SaveQuestion(managerQuestion);
-            questions = questionsRepository.GetQuestionsRepository(managerQuestion.GetFileInformation());
+
+            questions = QuestionsRepository.GetOll();
             countQuestions = questions.Count;
             questionsNumber = 0;
         }
@@ -61,9 +56,7 @@ namespace GeniiIdiot.Common
         public string CalculateDiagnose()
         {
             user.Diagnose = DiagnoseRepository.GetDiagnoses(user.RightAnswers, countQuestions);
-            usersResultRepository.Users.Add(user);
-            var managerResult = new FileManager("results.txt");
-            managerResult.AddInformationToFile(usersResultRepository.SaveUserResult());
+            UsersResultRepository.Append(user);
             return $"{user.Name}, Ваш диагноз : {user.Diagnose}";
         }
     }

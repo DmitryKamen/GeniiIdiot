@@ -12,11 +12,10 @@ namespace GeniiIdiotConsoleApp
     internal partial class Program
     {
         // Комментарий
-        static void Main(string[] args)
+        static void Main()
         {
             while (true)
             {
-                var managerQuestion = new FileManager("question.txt");
                 
                 var random = new Random();
                 Console.WriteLine("Введите ваше имя:");
@@ -34,18 +33,16 @@ namespace GeniiIdiotConsoleApp
                     game.AcceptAnswer(userAnswer);
                 }
                 var message = game.CalculateDiagnose();
-                Console.WriteLine(message);               
-
-                var managerResult = new FileManager("results.txt");
-                managerResult.AddInformationToFile(game.usersResultRepository.SaveUserResult());                
+                Console.WriteLine(message);                    
                 
                 Console.WriteLine("Хотите вывести результат введите - yes , если не хотите нажмите любую клавишу");
                 var showResultTest = Console.ReadLine();
-                if (showResultTest.ToLower() == "yes") game.usersResultRepository.ShowUserResult(managerResult.GetFileInformation());
-                game.questionsRepository.AddQuestion();
-                game.questionsRepository.SaveQuestion(managerQuestion);
-                game.questions = game.questionsRepository.GetQuestionsRepository(managerQuestion.GetFileInformation());
-                game.questionsRepository.RemoveQuestion(game.questions, managerQuestion);
+                if (showResultTest.ToLower() == "yes")
+                {
+                    var users = UsersResultRepository.CetAll();
+                    UsersResultRepository.Show(users);
+
+                }
 
                 Console.WriteLine("Если хотите продолжить нажмите любую клавишу, если нет введите - no ");
                 var continueTest = Console.ReadLine();

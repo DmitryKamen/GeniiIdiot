@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace GeniiIdiot.Common
 
         }
 
-        public void AddInformationToFile(string value)
+        public static void Append(string _filename,string value)
         {
             var writer = new StreamWriter(_filename, true);
             writer.WriteLine(value);
@@ -23,21 +24,20 @@ namespace GeniiIdiot.Common
 
         }
 
-        public List<string> GetFileInformation()
+        public static void Replace(string _filename, string value)
         {
-            var results = new List<string>();
+            var writer = new StreamWriter(_filename, false);
+            writer.WriteLine(value);
+            writer.Close();
 
+        }
+
+        public static string Get(string _filename)
+        {
             var reader = new StreamReader(_filename);
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                if (line != null)
-                {
-                    results.Add(line);
-                }
-            }
+            var fileData = reader.ReadToEnd();
             reader.Close();
-            return results;
+            return fileData;
         }
 
         public static bool Exist(string filename)
@@ -49,6 +49,8 @@ namespace GeniiIdiot.Common
         {
             File.WriteAllText(_filename, string.Empty);
         }
+
+        
     }
 }
 

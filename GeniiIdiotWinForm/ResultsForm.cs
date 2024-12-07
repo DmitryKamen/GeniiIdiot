@@ -25,9 +25,7 @@ namespace GeniiIdiotWinForm
 
         private void ResultsForm_Load(object sender, EventArgs e)
         {
-            var managerResult = new FileManager("results.txt");
-
-            var resultLst = UsersResultRepository.GetUsersResults(managerResult.GetFileInformation());
+            var resultLst = UsersResultRepository.CetAll();
             foreach (var result in resultLst)
             {
                 dataGridView1.Rows.Add(result.Name, result.RightAnswers,result.Diagnose);

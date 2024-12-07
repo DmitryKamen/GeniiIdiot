@@ -77,7 +77,7 @@ namespace GeniiIdiotWinForm
         }
 
         private void показатьПредыдущиеРезультатыToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        { 
             var resultsForm = new ResultsForm();
             resultsForm.ShowDialog();
         }

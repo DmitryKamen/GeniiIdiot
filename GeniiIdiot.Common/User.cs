@@ -7,6 +7,8 @@
         public int RightAnswers { get; set; }
 
         public string Diagnose { get; set; }
+        
+        public User() { }
         public User(string name)
         {
             Name = name;
