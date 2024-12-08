@@ -81,5 +81,17 @@ namespace GeniiIdiotWinForm
             var resultsForm = new ResultsForm();
             resultsForm.ShowDialog();
         }
+
+        private void добавитьНовыйВопросToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newQuestionForm = new AddNewQuestionForm();
+            newQuestionForm.ShowDialog();
+        }
+
+        private void списокВсехВопросовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newQuestionsListForm = new QuestionsListForm();
+            newQuestionsListForm.ShowDialog();
+        }
     }
 }

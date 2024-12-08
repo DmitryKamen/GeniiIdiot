@@ -34,8 +34,43 @@ namespace GeniiIdiot.Common
         {
             var jsonData = JsonConvert.SerializeObject(questions, Formatting.Indented);
             FileManager.Replace(Path, jsonData);
-
         }
+        public static void Add(Question question)
+        {
+            var questions = GetOll();
+            questions.Add(question);
+            Save(questions);
+        }
+
+        public static void Remove(Question question)
+        {
+            var questions = GetOll();
+            for (int i = 0; i < questions.Count; i++)
+            {
+                if (questions[i].Text == question.Text)
+                {  
+                    questions.RemoveAt(i);
+                    break;
+                }
+            }
+            Save(questions);
+        }
+
+        public static void Remove(string questionText)
+        {
+            var questions = GetOll();
+            for (int i = 0; i < questions.Count; i++)
+            {
+                if (questions[i].Text == questionText)
+                {
+                    questions.RemoveAt(i);
+                    break;
+                }
+            }
+            Save(questions);
+        }
+
+
         public static string GetUserAnswerText()
         {
             while (true)
